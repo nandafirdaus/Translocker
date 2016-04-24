@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Translocker
+namespace Translocker.Utils
 {
 	public class MapUtils
 	{

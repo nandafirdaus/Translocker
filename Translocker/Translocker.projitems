@@ -10,6 +10,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)MyClass.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MapUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\IOUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\MapUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Shelter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Assets\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Utils\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Assets\Shelters.txt" />
   </ItemGroup>
 </Project>
