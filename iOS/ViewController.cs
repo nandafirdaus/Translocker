@@ -30,7 +30,11 @@ namespace Translocker.iOS
 			base.ViewDidLoad ();
 
 			mapView = new MKMapView (View.Bounds);
+
+			CLLocationManager locationManager = new CLLocationManager();
+			locationManager.RequestWhenInUseAuthorization ();
 			mapView.ShowsUserLocation =true;
+
 			mapView.AutoresizingMask = UIViewAutoresizing.FlexibleDimensions;
 			View.AddSubview(mapView);
 
@@ -80,10 +84,6 @@ namespace Translocker.iOS
 
 		async Task LoadBuswayData () 
 		{
-			foreach (BuswayAnnotation item in BuswayPin) {
-				mapView.RemoveAnnotations (item);
-			}
-
 			RestUtils restUtils = new RestUtils ();
 			var rawData = await restUtils.GetDataAsync ("http://apps.roxinlabs.com/transjakarta/get-busway.php");
 			List<Busway> parsedData = restUtils.deserializeBuswayJson (rawData);
@@ -92,8 +92,11 @@ namespace Translocker.iOS
 
 		void LoadBuswayPin ()
 		{
+			mapView.RemoveAnnotations (BuswayPin.ToArray());
+
+			BuswayPin = new List<BuswayAnnotation> ();
+
 			foreach (Busway item in this.Busways) {
-				BuswayPin = new List<BuswayAnnotation> ();
 				BuswayAnnotation annotation = new BuswayAnnotation (item);
 				BuswayPin.Add (annotation);
 				mapView.AddAnnotations (annotation);
@@ -103,7 +106,7 @@ namespace Translocker.iOS
 		async void runAutoRefreshData ()
 		{
 			while (true) {
-				await Task.Delay (8000);
+				await Task.Delay (5000);
 				await LoadBuswayData ();
 				LoadBuswayPin ();
 			}

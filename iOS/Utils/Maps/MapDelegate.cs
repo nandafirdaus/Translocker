@@ -41,7 +41,7 @@ namespace Translocker.iOS
 
 				UIImage image = UIImage.FromFile ("Images/busway.png");
 				annotationView.Image = image;
-				annotationView.CanShowCallout = true;
+				annotationView.CanShowCallout = false;
 			}
 
 			return annotationView;

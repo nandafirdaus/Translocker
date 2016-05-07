@@ -20,11 +20,17 @@ namespace Translocker
 		{
 			var uri = new Uri (string.Format (url, string.Empty));
 
-			var response = await client.GetAsync (uri);
-			if (response.IsSuccessStatusCode) {
-				var content = await response.Content.ReadAsStringAsync ();
+			try {
 
-				return content;
+				var response = await client.GetAsync (uri);
+				if (response.IsSuccessStatusCode) {
+					var content = await response.Content.ReadAsStringAsync ();
+
+					return content;
+				}
+
+			} catch (Exception e) {
+				Console.WriteLine (e.ToString ());
 			}
 
 			return "";
