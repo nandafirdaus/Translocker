@@ -31,7 +31,18 @@ namespace Translocker.iOS
 				UIImage image = UIImage.FromFile ("Images/shelter.png");
 				annotationView.Image = image;
 				annotationView.CanShowCallout = true;
-			} 
+			} else if (annotation is BuswayAnnotation) {
+				// show busway annotation
+				annotationView = mapView.DequeueReusableAnnotation (BusAnnotationId);
+
+				if (annotationView == null) {
+					annotationView = new MKAnnotationView (annotation, BusAnnotationId);
+				}
+
+				UIImage image = UIImage.FromFile ("Images/busway.png");
+				annotationView.Image = image;
+				annotationView.CanShowCallout = true;
+			}
 
 			return annotationView;
 		}

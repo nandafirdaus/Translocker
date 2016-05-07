@@ -6,6 +6,8 @@ using CoreLocation;
 using System.Diagnostics;
 using Translocker.Utils;
 using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Translocker.iOS
 {
@@ -13,14 +15,17 @@ namespace Translocker.iOS
 	{
 		MKMapView mapView;
 		MapDelegate mapDelegate;
-		ArrayList Shelters;
+		List<ShelterAnnotation> Shelters;
+		List<Busway> Busways;
+		List<BuswayAnnotation> BuswayPin;
 
 		public ViewController (IntPtr handle) : base (handle)
 		{		
-			this.Shelters = new ArrayList ();
+			this.Shelters = new List<ShelterAnnotation> ();
+			this.BuswayPin = new List<BuswayAnnotation> ();
 		}
 
-		public override void ViewDidLoad ()
+		public async override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
 
@@ -37,11 +42,14 @@ namespace Translocker.iOS
 			mapView.Delegate = mapDelegate;
 
 			LoadData ();
+			await LoadBuswayData ();
 
-			foreach (ShelterAnnotation item in this.Shelters) {
-				
+			foreach (ShelterAnnotation item in this.Shelters) {				
 				mapView.AddAnnotations(item);
 			}
+
+			LoadBuswayPin ();
+			runAutoRefreshData ();
 
 //			coords = new CLLocationCoordinate2D(-6.229728,106.6894312);
 //			span = new MKCoordinateSpan(MapUtils.KilometresToLatitudeDegrees(2), MapUtils.KilometresToLongitudeDegrees(2, coords.Latitude));
@@ -70,15 +78,34 @@ namespace Translocker.iOS
 			}
 		}
 
-		class BasicMapAnnotation : MKAnnotation{
-			public override CLLocationCoordinate2D Coordinate {get;}
-			string title, subtitle;
-			public override string Title { get{ return title; }}
-			public override string Subtitle { get{ return subtitle; }}
-			public BasicMapAnnotation (CLLocationCoordinate2D coordinate, string title, string subtitle) {
-				this.Coordinate = coordinate;
-				this.title = title;
-				this.subtitle = subtitle;
+		async Task LoadBuswayData () 
+		{
+			foreach (BuswayAnnotation item in BuswayPin) {
+				mapView.RemoveAnnotations (item);
+			}
+
+			RestUtils restUtils = new RestUtils ();
+			var rawData = await restUtils.GetDataAsync ("http://apps.roxinlabs.com/transjakarta/get-busway.php");
+			List<Busway> parsedData = restUtils.deserializeBuswayJson (rawData);
+			this.Busways = parsedData;
+		}
+
+		void LoadBuswayPin ()
+		{
+			foreach (Busway item in this.Busways) {
+				BuswayPin = new List<BuswayAnnotation> ();
+				BuswayAnnotation annotation = new BuswayAnnotation (item);
+				BuswayPin.Add (annotation);
+				mapView.AddAnnotations (annotation);
+			}
+		}
+
+		async void runAutoRefreshData ()
+		{
+			while (true) {
+				await Task.Delay (8000);
+				await LoadBuswayData ();
+				LoadBuswayPin ();
 			}
 		}
 	}

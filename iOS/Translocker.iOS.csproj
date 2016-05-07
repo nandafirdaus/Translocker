@@ -77,6 +77,10 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
@@ -88,6 +92,7 @@
   <ItemGroup>
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -98,6 +103,7 @@
     </Compile>
     <Compile Include="Utils\Maps\MapDelegate.cs" />
     <Compile Include="Utils\Maps\ShelterAnnotation.cs" />
+    <Compile Include="Utils\Maps\BuswayAnnotation.cs" />
   </ItemGroup>
   <Import Project="..\Translocker\Translocker.projitems" Label="Shared" Condition="Exists('..\Translocker\Translocker.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
@@ -108,5 +114,6 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Images\shelter.png" />
+    <BundleResource Include="Images\busway.png" />
   </ItemGroup>
 </Project>
