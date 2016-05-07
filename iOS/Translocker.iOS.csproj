@@ -96,7 +96,17 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Maps\MapDelegate.cs" />
+    <Compile Include="Utils\Maps\ShelterAnnotation.cs" />
   </ItemGroup>
   <Import Project="..\Translocker\Translocker.projitems" Label="Shared" Condition="Exists('..\Translocker\Translocker.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Utils\" />
+    <Folder Include="Utils\Maps\" />
+    <Folder Include="Images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Images\shelter.png" />
+  </ItemGroup>
 </Project>

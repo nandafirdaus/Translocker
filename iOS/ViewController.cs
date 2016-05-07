@@ -12,6 +12,7 @@ namespace Translocker.iOS
 	public partial class ViewController : UIViewController
 	{
 		MKMapView mapView;
+		MapDelegate mapDelegate;
 		ArrayList Shelters;
 
 		public ViewController (IntPtr handle) : base (handle)
@@ -24,6 +25,7 @@ namespace Translocker.iOS
 			base.ViewDidLoad ();
 
 			mapView = new MKMapView (View.Bounds);
+			mapView.ShowsUserLocation =true;
 			mapView.AutoresizingMask = UIViewAutoresizing.FlexibleDimensions;
 			View.AddSubview(mapView);
 
@@ -31,12 +33,14 @@ namespace Translocker.iOS
 			MKCoordinateSpan span = new MKCoordinateSpan(MapUtils.KilometresToLatitudeDegrees(50), MapUtils.KilometresToLongitudeDegrees(10, coords.Latitude));
 			mapView.Region = new MKCoordinateRegion(coords, span);
 
+			mapDelegate = new MapDelegate ();
+			mapView.Delegate = mapDelegate;
+
 			LoadData ();
 
-			foreach (Shelter item in this.Shelters) {
-				var annotation = new BasicMapAnnotation (new CLLocationCoordinate2D(item.Latitude,item.Longitude)
-					, item.Name, "");
-				mapView.AddAnnotation(annotation);
+			foreach (ShelterAnnotation item in this.Shelters) {
+				
+				mapView.AddAnnotations(item);
 			}
 
 //			coords = new CLLocationCoordinate2D(-6.229728,106.6894312);
@@ -60,7 +64,7 @@ namespace Translocker.iOS
 			foreach (string datum in sheltersData) {
 				if (!string.IsNullOrEmpty(datum)) {
 					string[] temp = datum.Split (',');
-					Shelter shelter = new Shelter (temp[0], long.Parse(temp[2]), long.Parse(temp[1]));
+					ShelterAnnotation shelter = new ShelterAnnotation (temp[0], long.Parse(temp[2]), long.Parse(temp[1]));
 					this.Shelters.Add (shelter);
 				}
 			}
