@@ -31,20 +31,17 @@ namespace Translocker.iOS
 
 			mapView = new MKMapView (View.Bounds);
 
-			CLLocationManager locationManager = new CLLocationManager();
-			locationManager.RequestWhenInUseAuthorization ();
-			mapView.ShowsUserLocation =true;
+			mapDelegate = new MapDelegate ();
+			mapView.Delegate = mapDelegate;
 
 			mapView.AutoresizingMask = UIViewAutoresizing.FlexibleDimensions;
 			View.AddSubview(mapView);
+			mapView.ShowsUserLocation = false;
 
 			CLLocationCoordinate2D coords = new CLLocationCoordinate2D(-6.196280, 106.823325);
 			MKCoordinateSpan span = new MKCoordinateSpan(MapUtils.KilometresToLatitudeDegrees(50), MapUtils.KilometresToLongitudeDegrees(10, coords.Latitude));
 			mapView.Region = new MKCoordinateRegion(coords, span);
-
-			mapDelegate = new MapDelegate ();
-			mapView.Delegate = mapDelegate;
-
+				
 			LoadData ();
 			await LoadBuswayData ();
 
